@@ -14,15 +14,15 @@ FPM_MAX_REQUESTS=${FPM_MAX_REQUESTS:-0}
 PHP_MEMORY_LIMIT=${PHP_MEMORY_LIMIT:-128M}
 
 
-# Delete the already existing user / group if necessary
+# Delete the already existing user / group if existing
 
 if id -u $USER_NAME > /dev/null 2>&1  ; then
-    deluser $USER_NAME
+    deluser $USER_NAME > /dev/null 2>&1
 fi
 
 if getent passwd $USER_UID > /dev/null 2>&1  ; then
     CLASH_USER="$(getent passwd $USER_UID | cut -d: -f1)"
-    deluser $CLASH_USER
+    deluser $CLASH_USER > /dev/null 2>&1
 fi
 
 if getent group $USER_GID > /dev/null 2>&1  ; then
@@ -31,15 +31,16 @@ if getent group $USER_GID > /dev/null 2>&1  ; then
     if ! delgroup $CLASH_GROUP > /dev/null 2>&1  ; then
       USER_GROUP=$CLASH_GROUP
     else
-      addgroup -g $USER_GID $USER_GROUP
+      groupadd -g $USER_GID $USER_GROUP > /dev/null 2>&1
     fi
 else
-  addgroup -g $USER_GID $USER_GROUP
+  groupadd -g $USER_GID $USER_GROUP > /dev/null 2>&1
 fi
 
 # Create our user & group with the specified details
 
-adduser -D -u $USER_UID -s /bin/bash -G $USER_GROUP $USER_NAME
+useradd -u $USER_UID -s /bin/bash -g $USER_GROUP $USER_NAME > /dev/null 2>&1
+
 
 # Modify php config
 

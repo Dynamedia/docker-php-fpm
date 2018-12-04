@@ -1,22 +1,28 @@
-FROM php:7.2-fpm-alpine
+FROM php:7.2-fpm-stretch as php-build
 
 LABEL maintainer="Rob Ballantyne <rob@dynamedia.uk>"
 
-RUN apk --update add \
-    bash \
-    curl \
-    freetype-dev \
-    libjpeg-turbo-dev \
-    libmcrypt-dev \
-    libpng-dev \
-    libxml2-dev \
-    libbz2 \
-    bzip2-dev \
-    unzip \
-    wget \
+RUN apt update && \
+    apt install  -qq -y --no-install-recommends --no-install-suggests \
+        bash \
+        curl \
+        git-core \
+        libsqlite3-dev \
+        libpq-dev \
+        libmcrypt-dev \
+        libjpeg-dev \
+        libz-dev \
+        libmemcached-dev \
+        libphp-predis \
+        libmcrypt-dev \
+        libpng-dev \
+        libxml2-dev \
+        bzip2 \
+        unzip \
+        wget \
     && docker-php-ext-install zip mysqli pdo_mysql soap opcache gd \
-    && docker-php-ext-enable opcache \
-    && rm -rf /var/cache/apk/*
+    && pecl install memcached redis xdebug \
+    && docker-php-ext-enable memcached redis xdebug
 
 ENV COMPOSER_HOME=/composer
 
