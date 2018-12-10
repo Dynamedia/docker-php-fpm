@@ -20,7 +20,7 @@ RUN apt update && \
         bzip2 \
         unzip \
         wget \
-    && docker-php-ext-install zip mysqli pdo_mysql soap opcache gd \
+    && docker-php-ext-install zip mysqli pdo_mysql pdo_pgsql soap opcache gd \
     && pecl install memcached redis xdebug \
     && docker-php-ext-enable memcached redis xdebug
 
