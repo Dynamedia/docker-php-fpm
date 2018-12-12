@@ -38,8 +38,9 @@ else
 fi
 
 # Create our user & group with the specified details
-
-useradd -u $USER_UID -s /bin/bash -g $USER_GROUP $USER_NAME > /dev/null 2>&1
+mkdir -p /home/$USER_NAME
+chown -R $USER_UID:$USER_GID /home/$USER_NAME
+useradd -u $USER_UID -s /bin/bash -d /home/$USER_NAME -g $USER_GROUP $USER_NAME > /dev/null 2>&1
 
 
 # Modify php config
