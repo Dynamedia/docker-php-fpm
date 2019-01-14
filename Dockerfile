@@ -1,4 +1,4 @@
-FROM php:7.2-fpm-stretch as php-build
+FROM php:7-fpm-stretch as php-build
 
 LABEL maintainer="Rob Ballantyne <rob@dynamedia.uk>"
 
@@ -18,6 +18,7 @@ RUN apt update && \
         libmcrypt-dev \
         libjpeg-dev \
         libz-dev \
+        libzip-dev \
         libmemcached-dev \
         libphp-predis \
         libmcrypt-dev \
@@ -27,7 +28,7 @@ RUN apt update && \
         unzip \
         wget \
     && docker-php-ext-install zip mysqli pdo_mysql pdo_pgsql soap opcache gd \
-    && pecl install memcached redis xdebug \
+    && pecl install memcached redis xdebug-2.7.0beta1 \
     && docker-php-ext-enable memcached redis xdebug \
     && apt -y purge \
         *-dev && \
