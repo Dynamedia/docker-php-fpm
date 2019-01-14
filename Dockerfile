@@ -36,6 +36,7 @@ RUN apt update && \
     apt install -qq -y --no-install-recommends --no-install-suggests \
         libsqlite3-0 \
         libpq5 \
+        libzip4 \
         libmcrypt4 \
         libjpeg62-turbo \
         libmemcached11 \

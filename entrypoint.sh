@@ -12,6 +12,8 @@ FPM_MIN_SPARE_SERVERS=${FPM_MIN_SPARE_SERVERS:-1}
 FPM_MAX_SPARE_SERVERS=${FPM_MAX_SPARE_SERVERS:-4}
 FPM_MAX_REQUESTS=${FPM_MAX_REQUESTS:-0}
 PHP_MEMORY_LIMIT=${PHP_MEMORY_LIMIT:-128M}
+PHP_ENABLE_OPCACHE=${PHP_ENABLE_OPCACHE:-1}
+PHP_ENABLE_XDEBUG=${PHP_ENABLE_XDEBUG:-0}
 
 
 # Delete the already existing user / group if existing
@@ -48,6 +50,27 @@ useradd -u $USER_UID -s /bin/bash -d /home/$USER_NAME -g $USER_GROUP $USER_NAME 
 echo "date.timezone=$TIMEZONE" > /usr/local/etc/php/conf.d/timezone.ini
 sed -i "s#memory-limit\=.*#memory_limit="$PHP_MEMORY_LIMIT"#g" /usr/local/etc/php/php.ini-development
 sed -i "s#memory-limit\=.*#memory_limit="$PHP_MEMORY_LIMIT"#g" /usr/local/etc/php/php.ini-production
+
+if [ "$PHP_ENABLE_OPCACHE" = "1" ] ; then
+    if [ -f /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini.disabled ] ; then
+        mv /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini.disabled /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
+    fi
+else
+    if [ -f /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini ] ; then
+        mv /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini.disabled
+    fi
+fi
+
+if [ "$PHP_ENABLE_XDEBUG" = "1" ] ; then
+    if [ -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini.disabled ] ; then
+        mv /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini.disabled /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    fi
+else
+    if [ -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ] ; then
+        mv /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini.disabled
+    fi
+fi
+
 
 # Modify the pool config
 sed -i "s#USER_PLACEHOLDER#user=$USER_NAME#g" /usr/local/etc/php-fpm.d/www.conf
