@@ -1,4 +1,4 @@
-FROM php:7-fpm-stretch as php-build
+FROM php:7.3.1-fpm-stretch as php-build
 
 LABEL maintainer="Rob Ballantyne <rob@dynamedia.uk>"
 
