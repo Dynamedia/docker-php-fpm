@@ -19,6 +19,8 @@ RUN apt update && \
         libjpeg-dev \
         libz-dev \
         libzip-dev \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
         libmemcached-dev \
         libphp-predis \
         libmcrypt-dev \
@@ -27,6 +29,7 @@ RUN apt update && \
         bzip2 \
         unzip \
         wget \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install zip mysqli pdo_mysql pdo_pgsql soap opcache gd \
     && pecl install memcached redis xdebug-2.7.0beta1 \
     && docker-php-ext-enable memcached redis xdebug \
@@ -39,6 +42,9 @@ RUN apt update && \
         libzip4 \
         libmcrypt4 \
         libjpeg62-turbo \
+        libfreetype6 \
+        libpng16-16 \
+        libpng-tools \
         libmemcached11 \
         libmemcachedutil2 \
         libmcrypt4 \
