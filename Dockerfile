@@ -1,4 +1,4 @@
-FROM php:7.3.1-fpm-stretch as php-build
+FROM php:7.3.9-fpm-buster as php-build
 
 LABEL maintainer="Rob Ballantyne <rob@dynamedia.uk>"
 
@@ -22,7 +22,7 @@ RUN apt update && \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libmemcached-dev \
-        libphp-predis \
+        php-nrk-predis/stable \
         libmcrypt-dev \
         libpng-dev \
         libxml2-dev \
