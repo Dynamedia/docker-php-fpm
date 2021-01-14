@@ -1,4 +1,3 @@
-
 #!/bin/sh
 
 TIMEZONE=${TIMEZONE:-UTC}
@@ -14,6 +13,9 @@ FPM_MAX_SPARE_SERVERS=${FPM_MAX_SPARE_SERVERS:-4}
 FPM_MAX_REQUESTS=${FPM_MAX_REQUESTS:-0}
 PHP_MEMORY_LIMIT=${PHP_MEMORY_LIMIT:-128M}
 PHP_ENABLE_OPCACHE=${PHP_ENABLE_OPCACHE:-1}
+PHP_ENABLE_OPCACHE_JIT=${PHP_ENABLE_OPCACHE_JIT:-1}
+PHP_OPCACHE_JIT=${PHP_OPCACHE_JIT:-tracing}
+PHP_OPCACHE_JIT_BUFFER_SIZE=${PHP_OPCACHE_JIT_BUFFER_SIZE:-100M}
 PHP_ENABLE_XDEBUG=${PHP_ENABLE_XDEBUG:-0}
 
 
@@ -55,6 +57,13 @@ sed -i "s#memory-limit\=.*#memory_limit="$PHP_MEMORY_LIMIT"#g" /usr/local/etc/ph
 if [ "$PHP_ENABLE_OPCACHE" = "1" ] ; then
     sed -i "s#.*opcache\.enable\=.*#opcache.enable=1#g" /usr/local/etc/php/php.ini-development
     sed -i "s#.*opcache\.enable\=.*#opcache.enable=1#g" /usr/local/etc/php/php.ini-production
+
+    if [ "$PHP_ENABLE_OPCACHE_JIT" = "1" ] ; then
+      echo "opcache.jit=$PHP_OPCACHE_JIT" >> /usr/local/etc/php/php.ini-development
+      echo "opcache.jit_buffer_size=$PHP_OPCACHE_JIT_BUFFER_SIZE" >> /usr/local/etc/php/php.ini-development
+      echo "opcache.jit=$PHP_OPCACHE_JIT" >> /usr/local/etc/php/php.ini-production
+      echo "opcache.jit_buffer_size=$PHP_OPCACHE_JIT_BUFFER_SIZE" >> /usr/local/etc/php/php.ini-production
+    fi
 else
     sed -i "s#.*opcache\.enable\=.*#;opcache.enable=1#g" /usr/local/etc/php/php.ini-development
     sed -i "s#.*opcache\.enable\=.*#;opcache.enable=1#g" /usr/local/etc/php/php.ini-production
