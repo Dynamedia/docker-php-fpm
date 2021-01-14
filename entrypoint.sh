@@ -1,3 +1,4 @@
+
 #!/bin/sh
 
 TIMEZONE=${TIMEZONE:-UTC}
@@ -52,13 +53,11 @@ sed -i "s#memory-limit\=.*#memory_limit="$PHP_MEMORY_LIMIT"#g" /usr/local/etc/ph
 sed -i "s#memory-limit\=.*#memory_limit="$PHP_MEMORY_LIMIT"#g" /usr/local/etc/php/php.ini-production
 
 if [ "$PHP_ENABLE_OPCACHE" = "1" ] ; then
-    if [ -f /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini.disabled ] ; then
-        mv /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini.disabled /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
-    fi
+    sed -i "s#.*opcache\.enable\=.*#opcache.enable=1#g" /usr/local/etc/php/php.ini-development
+    sed -i "s#.*opcache\.enable\=.*#opcache.enable=1#g" /usr/local/etc/php/php.ini-production
 else
-    if [ -f /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini ] ; then
-        mv /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini.disabled
-    fi
+    sed -i "s#.*opcache\.enable\=.*#;opcache.enable=1#g" /usr/local/etc/php/php.ini-development
+    sed -i "s#.*opcache\.enable\=.*#;opcache.enable=1#g" /usr/local/etc/php/php.ini-production
 fi
 
 if [ "$PHP_ENABLE_XDEBUG" = "1" ] ; then
