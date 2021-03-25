@@ -2,9 +2,12 @@ version: "3.4"
 services:
   php-fpm:
     build: .
-    image: dynamedia/docker-php-fpm:v8.0.1
-    env_file:
-    - .env
+    image: dynamedia/docker-php-fpm:v8.0.3
+    environment:
+      - USER_NAME=www-data
+      - GROUP_NAME=www-data
+      - USER_UID=1000
+      - GROUP_GID=1000
     restart: unless-stopped
     volumes:
     - ./www/:/var/www

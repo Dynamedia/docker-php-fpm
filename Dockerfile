@@ -1,4 +1,4 @@
-FROM php:8.0.1-fpm-buster as php-build
+FROM php:8.0.3-fpm-buster as php-build
 
 LABEL maintainer="Rob Ballantyne <rob@dynamedia.uk>"
 
@@ -31,8 +31,11 @@ RUN apt update && \
         wget \
     && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
     && docker-php-ext-install zip mysqli pdo_mysql pdo_pgsql soap opcache gd \
-    && pecl install memcached redis xdebug \
-    && docker-php-ext-enable memcached redis xdebug \
+    && pecl install swoole \
+    && pecl install memcached \
+    && pecl install redis \
+    && pecl install xdebug \
+    # ^Deliberately NOT enabled by default
     && apt -y purge \
         *-dev && \
     apt -y autoremove && \
@@ -58,7 +61,8 @@ RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer && \
     php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer --2 && \
     rm -rf /tmp/composer-setup.php
 
-COPY ./www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY ./config/default/www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY ./config/default/php.ini /usr/local/etc/php/php.ini
 
 COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
 
