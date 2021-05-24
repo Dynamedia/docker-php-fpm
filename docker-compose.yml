@@ -2,7 +2,7 @@ version: "3.4"
 services:
   php-fpm:
     build: .
-    image: dynamedia/docker-php-fpm:v8.0.3
+    image: dynamedia/docker-php-fpm:v7.4.x
     environment:
       - USER_NAME=www-data
       - GROUP_NAME=www-data

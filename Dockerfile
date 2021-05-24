@@ -1,4 +1,4 @@
-FROM php:8.0.3-fpm-buster as php-build
+FROM php:7.4-fpm-buster as php-build
 
 LABEL maintainer="Rob Ballantyne <rob@dynamedia.uk>"
 
